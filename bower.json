@@ -3,11 +3,11 @@
   "author": "blaryjp",
   "version": "0.0.0",
   "ignore": [
-  	".gitignore",
-  	"src",
-  	"tasks",
-  	"Gruntfile.js",
-  	"package.json"
+    ".gitignore",
+    "src",
+    "tasks",
+    "Gruntfile.js",
+    "package.json"
   ],
   "devDependencies": {
     "angular": "~1.2.0",

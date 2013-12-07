@@ -3,7 +3,7 @@ module.exports = function (grunt) {
     grunt.config('bump', {
         options: {
             files: ['package.json', 'bower.json'],
-  			updateConfigs: ['pkg', 'bower']
+            updateConfigs: ['pkg', 'bower']
             commit: true,
             push: true,
             createTag: true,
