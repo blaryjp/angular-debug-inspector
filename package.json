@@ -1,0 +1,15 @@
+{
+  "name": "angular-debug-inspector",
+  "author": "blaryjp",
+  "version": "0.0.0",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-templater": "~0.0.4",
+    "grunt-ejs": "~0.1.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-cssmin": "~0.7.0",
+    "grunt-contrib-htmlmin": "~0.1.3",
+    "grunt-bump": "~0.0.11"
+  }
+}
