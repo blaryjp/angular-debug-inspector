@@ -8,7 +8,9 @@ module.exports = function (grunt) {
 
         builddir: '.tmp',
         distdir: 'dist',
-        devdir: 'src'
+        devdir: 'src',
+
+        theme: grunt.option('theme') || 'textmate'
 
     });
 
@@ -18,11 +20,11 @@ module.exports = function (grunt) {
     // Register alias tasks.
     grunt.registerTask('dev',
         'Build files for development.',
-        ['clean', 'cssmin', 'htmlmin', 'ejs']);
+        ['clean', 'cssmin', 'htmlmin', 'ejs', 'concat']);
 
     grunt.registerTask('prod',
         'Build file for production.',
-        ['clean', 'cssmin', 'htmlmin', 'ejs', 'uglify']);
+        ['clean', 'cssmin', 'htmlmin', 'ejs', 'uglify', 'concat']);
 
     // --type=patch|minor|major
     grunt.registerTask('release',

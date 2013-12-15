@@ -3,10 +3,10 @@ module.exports = function (grunt) {
     grunt.config('uglify', {
         dist: {
             options: {
-                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> - Copyright https://github.com/blaryjp/angular-debug-inspector and Angular Batarang authors */'
+                banner: '/*! <%= pkg.name %> - Theme <%= theme %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> - Copyright https://github.com/blaryjp/angular-debug-inspector and Angular Batarang authors */\n'
             },
             files: {
-                '<%= distdir %>/widget.min.js': ['<%= builddir %>/src/widget/widget.js'],
+                '<%= builddir %>/src/widget/widget-<%= theme %>.min.js': ['<%= builddir %>/src/widget/widget.js'],
             }
         }
     });
