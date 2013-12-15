@@ -3,7 +3,7 @@ module.exports = function (grunt) {
     grunt.config('ejs', {
         all: {
             src: ['src/widget/widget.ejs'],
-            dest: '<%= builddir %>/',
+            dest: '<%= builddir %>',
             expand: true,
             ext: '.js'
         }

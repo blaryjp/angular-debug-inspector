@@ -18,11 +18,11 @@ module.exports = function (grunt) {
     // Register alias tasks.
     grunt.registerTask('dev',
         'Build files for development.',
-        ['cssmin', 'htmlmin', 'ejs']);
+        ['clean', 'cssmin', 'htmlmin', 'ejs']);
 
     grunt.registerTask('prod',
         'Build file for production.',
-        ['cssmin', 'htmlmin', 'ejs']);
+        ['clean', 'cssmin', 'htmlmin', 'ejs', 'uglify']);
 
     // --type=patch|minor|major
     grunt.registerTask('release',
