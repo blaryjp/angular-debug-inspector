@@ -1,0 +1,94 @@
+;(function(window, document, undefined) {
+
+var inject = function () {
+
+    document.head.appendChild((function () {
+
+        var fn = function bootstrap (window) {
+
+            // from this context
+            var angular = window.angular,
+                document = window.document;
+
+
+            // Loader
+            // ======
+            <% include js/loader.ejs %>
+
+
+            // Variables
+            // =========
+            <% include js/vars.ejs %>
+
+
+            // Helpers
+            // =======
+            <% include js/helpers.ejs %>
+
+
+            // Public API
+            // ==========
+            <% include js/api.ejs %>
+
+
+            // Instrumentation
+            // ===============
+            <% include js/instrumentation.ejs %>
+
+
+            // Init
+            // ====
+            api.enable();
+
+        };
+
+        // Return a script element with the above code embedded in it
+        var script = window.document.createElement('script');
+        script.innerHTML = '(' + fn.toString() + '(window))';
+
+        return script;
+    }()));
+};
+
+var __ngDebugEnabled = ~document.cookie.indexOf('__ngDebug=true');
+
+// Add pin
+document.addEventListener('DOMContentLoaded', function () {
+
+    // CSS
+    document.head.appendChild((function () {
+
+        var style = window.document.createElement('style');
+        style.type = "text/css";
+        style.innerHTML = "<% include ../../.tmp/pin.css %>";     // Take care to not use double quotes in CSS files
+
+        return style;
+    }()));
+
+    // HTML
+    document.body.appendChild((function () {
+
+        var pin = window.document.createElement('div');
+        pin.id = "adi-pin";
+        pin.className += (__ngDebugEnabled ? 'adi-pin-enabled' : 'adi-pin-disabled');
+
+        pin.addEventListener('click', function () {
+            if (__ngDebugEnabled) {
+                document.cookie = '__ngDebug=; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+            } else {
+                document.cookie = '__ngDebug=true; expires=Fri, 31 Dec 9999 23:59:59 GMT;';
+            }
+            window.location.reload();
+        });
+
+        return pin;
+    }()));
+
+});
+
+// Only inject if cookie is set
+if (__ngDebugEnabled) {
+    document.addEventListener('DOMContentLoaded', inject);
+}
+
+})(window, document);

@@ -1,0 +1,25 @@
+// Private state
+// =============
+
+//var bootstrap = window.angular.bootstrap;
+var debug = {
+    // map of scopes --> watcher function name strings
+    watchers: {},
+
+    // maps of watch/apply exp/fns to perf data
+    watchPerf: {},
+    applyPerf: {},
+
+    // map of scope.$ids --> $scope objects
+    scopes: {},
+    // map of scope.$ids --> model objects
+    models: {},
+    // map of $ids --> bools
+    scopeDirty: {},
+
+    // map of $ids --> refs to $rootScope objects
+    rootScopes: {},
+    scopeTreeDirty: {},
+
+    deps: []
+};

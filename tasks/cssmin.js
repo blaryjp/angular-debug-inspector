@@ -3,7 +3,8 @@ module.exports = function (grunt) {
     grunt.config('cssmin', {
         dev: {
             files: {
-                '<%= builddir %>/main.css': ['src/widget/css/main.css']
+                '<%= builddir %>/pin.css': ['src/widget/css/pin.css'],
+                '<%= builddir %>/popup.css': ['src/widget/css/popup.css']
             }
         }
     });

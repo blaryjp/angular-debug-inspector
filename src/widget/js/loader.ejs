@@ -1,0 +1,41 @@
+// Helper to determine if the root 'ng' module has been loaded
+// window.angular may be available if the app is bootstrapped asynchronously, but 'ng' might
+// finish loading later.
+var ngLoaded = function () {
+    if (!window.angular) {
+        return false;
+    }
+    try {
+        window.angular.module('ng');
+    } catch (e) {
+        return false;
+    }
+    return true;
+};
+
+if (!ngLoaded()) {
+    (function () {
+        // TODO: var name
+        var areWeThereYet = function (ev) {
+            if (ev.srcElement.tagName === 'SCRIPT') {
+                var oldOnload = ev.srcElement.onload;
+                ev.srcElement.onload = function () {
+                    if (ngLoaded()) {
+                        document.removeEventListener('DOMNodeInserted', areWeThereYet);
+                        bootstrap(window);
+                    }
+                    if (oldOnload) {
+                        oldOnload.apply(this, arguments);
+                    }
+                };
+            }
+        };
+        document.addEventListener('DOMNodeInserted', areWeThereYet);
+    }());
+    return;
+}
+
+// do not patch twice
+if (window.__ngDebug) {
+    return;
+}

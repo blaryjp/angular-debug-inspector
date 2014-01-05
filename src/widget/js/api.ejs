@@ -1,0 +1,251 @@
+var api,
+    popup,
+    popup_uid,
+    hovering,
+    hoverScopeElt;
+
+// Hovering & Selecting scopes
+
+var t;
+
+function markHoverElt () {
+    if (hoverScopeElt) {
+        hoverScopeElt.addClass('adi-selected');
+    }
+}
+function unmarkHoverElt () {
+    if (hoverScopeElt) {
+        hoverScopeElt.removeClass('adi-selected');
+    }
+}
+
+function onSelectScope (ev) {
+    api.stopSelect();
+    popup.onSelectScope(hoverScopeElt, hoverScopeElt.scope());
+}
+
+function onHoverScope (ev) {
+    ev.stopPropagation();
+    unmarkHoverElt();
+    hoverScopeElt = angular.element(this);
+    markHoverElt();
+    clearTimeout(t);
+    t = setTimeout(function () {
+        popup.onHoverScope(hoverScopeElt, hoverScopeElt.scope());
+    }, 100);
+}
+
+// Let's go
+api = window.__ngDebug = {
+
+    getDeps: function () {
+        return debug.deps;
+    },
+
+    getRootScopeIds: function () {
+        var ids = [];
+        angular.forEach(debug.rootScopes, function (elt, id) {
+            ids.push(id);
+        });
+        return ids;
+    },
+
+    // returns null or cached scope
+    getModel: function (id) {
+        if (debug.scopeDirty[id]) {
+            this.updateScopeModelCache(debug.scopes[id]);
+            return debug.models[id];
+        }
+    },
+
+    getScopeTree: function (id) {
+        if (debug.scopeTreeDirty[id] === false) {
+            return;
+        }
+        var traverse = function (sc) {
+            var tree = {
+                id: sc.$id,
+                children: []
+            };
+
+            var child = sc.$$childHead;
+            if (child) {
+                do {
+                    tree.children.push(traverse(child));
+                } while (child !== sc.$$childTail && (child = child.$$nextSibling));
+            }
+
+            return tree;
+        };
+
+        var root = debug.rootScopes[id];
+        var tree = traverse(root);
+
+        if (tree) {
+            debug.scopeTreeDirty[id] = false;
+        }
+
+
+        return tree;
+    },
+
+    getWatchPerf: function () {
+        var changes = [];
+        angular.forEach(debug.watchPerf, function (info, name) {
+            if (info.time > 0) {
+                changes.push({
+                    name: name,
+                    time: info.time
+                });
+                info.time = 0;
+            }
+        });
+        return changes;
+    },
+
+    getWatchTree: function (id) {
+        var traverse = function (sc) {
+            var tree = {
+                id: sc.$id,
+                watchers: debug.watchers[sc.$id],
+                children: []
+            };
+
+            var child = sc.$$childHead;
+            if (child) {
+                do {
+                    tree.children.push(traverse(child));
+                } while (child !== sc.$$childTail && (child = child.$$nextSibling));
+            }
+
+            return tree;
+        };
+
+        var root = debug.rootScopes[id];
+        var tree = traverse(root);
+
+        return tree;
+    },
+
+    // given a scope object, return an object with deep clones
+    // of the models exposed on that scope
+    getScopeLocals : function (scope) {
+        var scopeLocals = {}, prop;
+        for (prop in scope) {
+            if (scope.hasOwnProperty(prop) && prop !== 'this' && prop[0] !== '$') {
+                scopeLocals[prop] = decycle(scope[prop]);
+            }
+        }
+        return scopeLocals;
+    },
+
+    getRootScope : function () {
+        return debug.rootScopes[this.getRootScopeIds()[0]];
+    },
+
+    updateScopeModelCache : function (scope) {
+        debug.models[scope.$id] = this.getScopeLocals(scope);
+        debug.scopeDirty[scope.$id] = false;
+    },
+
+    executeInScope : function ($scope, obj) {
+        $scope.$apply(function() {
+            angular.forEach(obj, function(val, key) {
+                $scope[key] = val;
+            });
+        });
+    },
+    broadcastInScope : function ($scope, subject, params) {
+        $scope.$broadcast(subject, params);
+    },
+
+
+    select: function() {
+        hovering = true;
+        angular.element(document.getElementsByClassName('ng-scope'))
+            .bind('click', onSelectScope)
+            .bind('mouseover', onHoverScope);
+        angular.element(document.body).css('cursor', 'crosshair');
+    },
+    stopSelect: function () {
+        if (hovering) {
+            angular.element(document.getElementsByClassName('ng-scope'))
+                .unbind('click', onSelectScope)
+                .unbind('mouseover', onHoverScope);
+            angular.element(document.body).css('cursor', '');
+            unmarkHoverElt();
+            hovering = false;
+        }
+    },
+
+    setUID: function (uid) {
+        popup_uid = uid.toString();
+    },
+
+    enable: function () {
+
+        popup = window.open("", "adi","width=400,height=400,status=no,menubar=no,toolbar=no,location=no");
+
+        if (!popup) {   // Browser blocked the popup!
+            alert('[angular-debug-inspector]\nYour browser blocked the popup!');
+            return;
+        }
+
+        if (popup.initialized) {    // Popup already opened
+
+            popup.registerView(window);
+
+        } else {    // Create it
+
+            angular.element(popup.document.body).append('<% include ../../../.tmp/main.html %>');    // Take care to not use simple quotes in HTML files
+
+            // Append popup CSS
+            popup.document.head.appendChild((function () {
+                var style = window.document.createElement('style');
+                style.type = "text/css";
+                style.innerHTML = "<% include ../../../.tmp/popup.css %>";    // Take care to not use double quotes in CSS files
+                return style;
+            }()));
+
+            // Append Ace editor into popup
+            popup.document.head.appendChild((function () {
+                var aceEditor = function injector (window) {
+                    /* jshint ignore:start */
+                    <% include ../../../.tmp/ace.min.js %>
+                    /* jshint ignore:end */
+                };
+                var script = window.document.createElement('script');
+                script.innerHTML = '(' + aceEditor.toString() + '(window))';
+                return script;
+            }()));
+
+            // Append Ace editor into popup
+            popup.document.head.appendChild((function () {
+                var popupScript = function injector (window) {
+                    <% include popup.js %>
+                };
+                var script = window.document.createElement('script');
+                script.innerHTML = '(' + popupScript.toString() + '(window))';
+                return script;
+            }()));
+
+        }
+
+        window.addEventListener('focus', function () {
+            try {
+                popup.setView(popup_uid);
+            } catch(e) {}
+        });
+
+        window.addEventListener('beforeunload', function () {
+            try {
+                popup.unsetView(popup_uid);
+            } catch(e) {}
+        });
+    },
+    disable: function () {
+        this.stopSelect();
+        angular.element('#adi-pin').removeClass('adi-pin-enabled').addClass('adi-pin-disabled');
+        document.cookie = '__ngDebug=; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+    }
+};

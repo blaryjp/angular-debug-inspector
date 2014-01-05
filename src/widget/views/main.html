@@ -1,0 +1,26 @@
+<div id="adi" class="mode-s">
+    <div id="header">
+        <h1>No scope</h1>
+        <span id="apply" title="Apply in scope">apply</span>
+        <span id="mode-p" title="Watch perf"></span>
+        <span id="mode-bc" title="Broadcast"></span>
+        <span id="mode-s" title="Models"></span>
+        <span id="select" title="Select a scope"></span>
+    </div>
+    <div id="body">
+        <div id="bc">
+            Into:
+            <input type="radio" id="bc-s" name="bc" value="scope" disabled="disabled"/>
+            <label for="bc-s" id="bc-s-l">No scope</label>
+            <input type="radio" id="bc-rs" name="bc" value="rootscope"/>
+            <label for="bc-rs">Root scope</label>
+            <hr />
+            Event name:
+            <input type="text" id="bc-msg" />
+            <hr />
+            Params (optional):
+        </div>
+        <div id="tree"></div>
+        <div id="perf"></div>
+    </div>
+</div>

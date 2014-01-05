@@ -6,10 +6,9 @@ module.exports = function (grunt) {
                 'bower_components/ace-builds/src-min-noconflict/ace.js',
                 'bower_components/ace-builds/src-min-noconflict/mode-json.js',
                 'bower_components/ace-builds/src-min-noconflict/worker-json.js',
-                'bower_components/ace-builds/src-min-noconflict/theme-<%= theme %>.js',
-                '<%= builddir %>/src/widget/widget-<%= theme %>.min.js'
+                'bower_components/ace-builds/src-min-noconflict/theme-<%= theme %>.js'
             ],
-            dest: '<%= distdir %>/widget-<%= theme %>.min.js'
+            dest: '<%= builddir %>/ace.min.js'
         }
     });
 

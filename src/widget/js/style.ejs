@@ -1,0 +1,9 @@
+document.head.appendChild((function () {
+
+    // Return a style element with the included CSS embedded in it
+    var style = window.document.createElement('style');
+    style.type = "text/css";
+    style.innerHTML = "<% include ../../../.tmp/main.css %>";     // Take care to not use double quotes in CSS files
+
+    return style;
+}()));
