@@ -9,3 +9,4 @@ release:
 	grunt bump-only:$(type)
 	make all
 	grunt bump-commit
+	git push --tags origin master
