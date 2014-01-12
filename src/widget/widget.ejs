@@ -50,7 +50,7 @@ var inject = function () {
     }()));
 };
 
-var __ngDebugEnabled = ~document.cookie.indexOf('__ngDebug=true');
+var __adiDebugEnabled = ~document.cookie.indexOf('__adiDebug=true');
 
 // Add pin
 document.addEventListener('DOMContentLoaded', function () {
@@ -70,13 +70,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var pin = window.document.createElement('div');
         pin.id = "adi-pin";
-        pin.className += (__ngDebugEnabled ? 'adi-pin-enabled' : 'adi-pin-disabled');
+        pin.className += (__adiDebugEnabled ? 'adi-pin-enabled' : 'adi-pin-disabled');
 
         pin.addEventListener('click', function () {
-            if (__ngDebugEnabled) {
-                document.cookie = '__ngDebug=; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+            if (__adiDebugEnabled) {
+                document.cookie = '__adiDebug=; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
             } else {
-                document.cookie = '__ngDebug=true; expires=Fri, 31 Dec 9999 23:59:59 GMT;';
+                document.cookie = '__adiDebug=true; expires=Fri, 31 Dec 9999 23:59:59 GMT;';
             }
             window.location.reload();
         });
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Only inject if cookie is set
-if (__ngDebugEnabled) {
+if (__adiDebugEnabled) {
     document.addEventListener('DOMContentLoaded', inject);
 }
 

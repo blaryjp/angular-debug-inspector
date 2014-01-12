@@ -6,7 +6,7 @@ module.exports = function (grunt) {
         		theme: '<%= theme %>'
         	},
             src: ['src/widget/widget.ejs'],
-            dest: '<%= builddir %>/widget-<%= theme %>.min.js',
+            dest: '<%= builddir %>/widget-<%= theme %>.js',
             expand: false,
             ext: '.js'
         }

@@ -10,7 +10,7 @@
     "package.json"
   ],
   "devDependencies": {
-    "angular": "1.2.7",
+    "angular": "~1.2.7",
     "ace-builds": "~1.1.0"
   }
 }

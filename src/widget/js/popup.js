@@ -16,6 +16,7 @@ var currentUID = 0,
     currentElt = {},
     watchPerf = {},
     hoverScopeElt = null,
+    intv,
     currentMode = 'scope';
 
 
@@ -187,9 +188,9 @@ function applyInScope () {
         currentContext[currentUID].broadcastInScope((dest === 'scope' ? currentScope[currentUID] : currentContext[currentUID].getRootScope()), msg, params);
 
         // Clear
-        _id('bc-msg').value = '';
+        // _id('bc-msg').value = '';
         _id('bc-msg').focus();
-        aceSession.setValue('');
+        // aceSession.setValue('');
     }
 }
 
@@ -261,6 +262,15 @@ function getWatchPerf () {
     }
 }
 
+function poll () {
+    if (intv) {
+        intv = clearInterval(intv);
+    }
+    intv = window.setInterval(function() {
+        getWatchPerf();
+    }, 500);
+}
+
 
 /*=================================
 =            View mgmt            =
@@ -269,13 +279,14 @@ function getWatchPerf () {
 window.registerView = function (context) {
 	uid_count++;
 	currentUID = uid_count.toString();
-    currentContext[currentUID] = context.__ngDebug;
+    currentContext[currentUID] = context.__adiDebug;
     currentContext[currentUID].setUID(currentUID);
     watchPerf[currentUID] = {
         total: 0,
         items: {},
         cache: []
     };
+    poll();
 }
 window.setView = function (uid) {
     if (uid !== currentUID) {
@@ -285,6 +296,7 @@ window.setView = function (uid) {
             currentContext[currentUID].stopSelect();
         }
         switchMode(currentMode);    // Refresh view
+        poll();
     }
 }
 window.unsetView = function (uid) {
@@ -312,9 +324,3 @@ window.addEventListener('beforeunload', function () {
 
 window.registerView(window.opener);
 window.initialized = true;
-
-// Polling
-setInterval(function() {
-    // @todo need to poll ALL contexts, not only current
-    getWatchPerf();
-}, 500);

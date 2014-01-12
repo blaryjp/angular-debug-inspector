@@ -36,7 +36,7 @@ function onHoverScope (ev) {
 }
 
 // Let's go
-api = window.__ngDebug = {
+api = window.__adiDebug = {
 
     getDeps: function () {
         return debug.deps;
@@ -246,6 +246,6 @@ api = window.__ngDebug = {
     disable: function () {
         this.stopSelect();
         angular.element('#adi-pin').removeClass('adi-pin-enabled').addClass('adi-pin-disabled');
-        document.cookie = '__ngDebug=; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+        document.cookie = '__adiDebug=; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
     }
 };
